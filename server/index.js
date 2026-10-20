@@ -54,11 +54,11 @@ app.use(loadUser);
 
 const requireRole =
   (...roles) =>
-  (req, _res, next) => {
-    if (!req.user) fail(401, 'Please log in');
-    if (roles.length && !roles.includes(req.user.role)) fail(403, 'You do not have access to this');
-    next();
-  };
+    (req, _res, next) => {
+      if (!req.user) fail(401, 'Please log in');
+      if (roles.length && !roles.includes(req.user.role)) fail(403, 'You do not have access to this');
+      next();
+    };
 const anyUser = requireRole();
 const ownerOnly = requireRole('owner');
 
