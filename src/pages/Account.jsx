@@ -21,6 +21,12 @@ export default function Account() {
   };
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
 
+  const resetDemo = async () => {
+    if (!window.confirm('Wipe all data in this browser and reload the sample data?')) return;
+    await api('/demo/reset', { method: 'POST' });
+    window.location.assign('/');
+  };
+
   return (
     <>
       <PageHeader title="My account" subtitle={`${user.name} · ${ROLE_LABEL[user.role]}${user.location_name ? ` · ${user.location_name}` : ''}`} />
@@ -39,6 +45,16 @@ export default function Account() {
           <Button type="submit">Change password</Button>
         </form>
       </Card>
+      {user.role === 'owner' && (
+        <Card title="Demo data" className="mt-6 max-w-md">
+          <p className="mb-4 text-sm text-slate-600">
+            All data is stored in this browser only. Resetting wipes every change and reloads the sample data.
+          </p>
+          <Button variant="danger" onClick={resetDemo}>
+            Reset demo data
+          </Button>
+        </Card>
+      )}
     </>
   );
 }

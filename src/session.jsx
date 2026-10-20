@@ -35,6 +35,10 @@ export function SessionProvider({ children }) {
     await api('/login', { method: 'POST', body: { username, password } });
     await load();
   };
+  const demoLogin = async (role) => {
+    await api('/demo/login', { method: 'POST', body: { role } });
+    await load();
+  };
   const logout = async () => {
     await api('/logout', { method: 'POST' });
     setUser(null);
@@ -54,7 +58,7 @@ export function SessionProvider({ children }) {
 
   return (
     <SessionContext.Provider
-      value={{ user, meta, refreshMeta, login, logout, isOwner, locationId, chooseLocation }}
+      value={{ user, meta, refreshMeta, login, demoLogin, logout, isOwner, locationId, chooseLocation }}
     >
       {children}
     </SessionContext.Provider>

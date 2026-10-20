@@ -1,17 +1,15 @@
+import { handle } from './backend/routes';
+
+/** All data is handled in the browser (see src/backend); there is no server. */
 export async function api(path, { method = 'GET', body } = {}) {
-  const res = await fetch(`/api${path}`, {
-    method,
-    headers: body !== undefined ? { 'Content-Type': 'application/json' } : undefined,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-    credentials: 'same-origin',
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const err = new Error(data.error || `Request failed (${res.status})`);
-    err.status = res.status;
+  try {
+    return await handle(method, path, body === undefined ? undefined : JSON.parse(JSON.stringify(body)));
+  } catch (e) {
+    const err = new Error(e.status ? e.message : 'Something went wrong');
+    err.status = e.status || 500;
+    if (!e.status) console.error(e);
     throw err;
   }
-  return data;
 }
 
 export const qs = (params) => {
